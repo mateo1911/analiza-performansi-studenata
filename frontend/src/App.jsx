@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import Card1Stats from './components/Card1Stats.jsx'
 import Card2Charts from './components/Card2Charts.jsx'
-// import Card3Predict from './components/Card3Predict.jsx'
+import Card3Predict from './components/Card3Predict.jsx'
 
 // Definicija tri kartice (taba) prema profesorovoj uputi:
 //  1 - eksplorativna analiza (brojcano/tablicno)
@@ -47,12 +47,7 @@ export default function App() {
       <main>
         {activeTab === 'stats' && <Card1Stats />}
         {activeTab === 'charts' && <Card2Charts />}
-        {activeTab === 'predict' && (
-          <div className="card">
-            <div className="card-title">Kartica 3 — predikcija (uskoro)</div>
-            <p className="loading">Ovdje ce ici ML + DL predikcija.</p>
-          </div>
-        )}
+        {activeTab === 'predict' && <Card3Predict />}
       </main>
     </div>
   )
