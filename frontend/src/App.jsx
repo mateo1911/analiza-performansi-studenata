@@ -1,8 +1,7 @@
 import { useState } from 'react'
 
 import Card1Stats from './components/Card1Stats.jsx'
-// Preostale kartice dodajemo u sljedecim commitovima.
-// import Card2Charts from './components/Card2Charts.jsx'
+import Card2Charts from './components/Card2Charts.jsx'
 // import Card3Predict from './components/Card3Predict.jsx'
 
 // Definicija tri kartice (taba) prema profesorovoj uputi:
@@ -47,12 +46,7 @@ export default function App() {
       {/* Sadrzaj aktivne kartice */}
       <main>
         {activeTab === 'stats' && <Card1Stats />}
-        {activeTab === 'charts' && (
-          <div className="card">
-            <div className="card-title">Kartica 2 — grafovi (uskoro)</div>
-            <p className="loading">Ovdje ce ici grafovi i uvidi.</p>
-          </div>
-        )}
+        {activeTab === 'charts' && <Card2Charts />}
         {activeTab === 'predict' && (
           <div className="card">
             <div className="card-title">Kartica 3 — predikcija (uskoro)</div>
