@@ -120,6 +120,82 @@ class DataProcessor:
         rows.sort(key=lambda r: r["average"], reverse=True)
         return rows
 
+    # --- Podaci za KARTICU 2 (grafovi) ------------------------------------
+    def score_distribution(self, score_col, bins=10):
+        """
+        Histogram jedne ocjene: u koliko 'kosara' (bins) pada koliko studenata.
+        Vraca rubove kosara i frekvencije. Frontend ovo crta kao stupcasti graf.
+
+        Primjer rezultata:
+            {"bins": [0,10,20,...,100], "counts": [2,5,18,...]}
+        """
+        if score_col not in config.SCORE_COLUMNS + [config.AVG_SCORE_COL]:
+            raise ValueError(f"Nepoznata ocjena: {score_col}")
+
+        series = self.df[score_col]
+        # pd.cut podijeli raspon na 'bins' jednakih intervala i prebroji
+        counts, edges = pd.cut(series, bins=bins, retbins=True)
+        freq = series.groupby(pd.cut(series, bins=bins), observed=False).count()
+
+        return {
+            "column": score_col,
+            "bin_edges": [round(float(e), 1) for e in edges],
+            "counts": [int(c) for c in freq.values],
+        }
+
+    def all_distributions(self, bins=10):
+        """Histogrami za sve tri ocjene odjednom (za prikaz jedan do drugog)."""
+        return {
+            col: self.score_distribution(col, bins=bins)
+            for col in config.SCORE_COLUMNS
+        }
+
+    def correlation_matrix(self):
+        """
+        Korelacijska matrica triju ocjena (Pearson).
+        Pokazuje koliko su ocjene medusobno povezane (0-1).
+        Frontend ovo crta kao heatmapu.
+        """
+        corr = self.df[config.SCORE_COLUMNS].corr().round(3)
+        return {
+            "labels": config.SCORE_COLUMNS,
+            "matrix": [[float(corr.loc[r, c]) for c in config.SCORE_COLUMNS]
+                       for r in config.SCORE_COLUMNS],
+        }
+
+    def pass_fail_distribution(self):
+        """
+        Koliko studenata prolazi vs pada - za pita graf (pie/donut).
+        """
+        passed = int(self.df[config.PASSED_COL].sum())
+        total = self.total_students()
+        return {
+            "passed": passed,
+            "failed": total - passed,
+        }
+
+    def group_comparison(self, group_col, score_col=None):
+        """
+        Usporedba prosjeka ocjene po grupama - za stupcasti graf.
+        Npr. group_col='lunch', score_col='math score' -> prosjek mate po lunchu.
+        Ako score_col nije zadan, koristi se ukupni prosjek (average score).
+
+        Ovo su "uvidi": jasno se vidi koja grupa ima bolje/losije ocjene.
+        """
+        if group_col not in config.CATEGORICAL_FEATURES:
+            raise ValueError(f"Nepoznata znacajka: {group_col}")
+        score_col = score_col or config.AVG_SCORE_COL
+
+        grouped = self.df.groupby(group_col)[score_col].mean().round(2)
+        # Sortiraj silazno po prosjeku
+        grouped = grouped.sort_values(ascending=False)
+        return {
+            "group_by": group_col,
+            "score": score_col,
+            "labels": [str(i) for i in grouped.index],
+            "values": [float(v) for v in grouped.values],
+        }
+
 
 # Jedna globalna instanca koju cijela aplikacija dijeli.
 # Ucita se jednom kod importa i drzi dataset u memoriji.
