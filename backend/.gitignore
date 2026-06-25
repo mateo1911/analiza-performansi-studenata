@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtualno okruzenje
+venv/
+.venv/
+env/
+
+# Trenirani modeli (generiraju se na startu)
+models/trained/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
