@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-// Kartice cemo dodati u sljedecim commitovima. Za sada placeholderi.
-// import Card1Stats from './components/Card1Stats.jsx'
+import Card1Stats from './components/Card1Stats.jsx'
+// Preostale kartice dodajemo u sljedecim commitovima.
 // import Card2Charts from './components/Card2Charts.jsx'
 // import Card3Predict from './components/Card3Predict.jsx'
 
@@ -46,12 +46,7 @@ export default function App() {
 
       {/* Sadrzaj aktivne kartice */}
       <main>
-        {activeTab === 'stats' && (
-          <div className="card">
-            <div className="card-title">Kartica 1 — statistike (uskoro)</div>
-            <p className="loading">Ovdje ce ici brojcani i tablicni podaci.</p>
-          </div>
-        )}
+        {activeTab === 'stats' && <Card1Stats />}
         {activeTab === 'charts' && (
           <div className="card">
             <div className="card-title">Kartica 2 — grafovi (uskoro)</div>
